@@ -3,15 +3,14 @@ package com.dhiegoCommerce.EcommerceProject.services;
 import com.dhiegoCommerce.EcommerceProject.dtos.ProductDTO;
 import com.dhiegoCommerce.EcommerceProject.entities.Product;
 import com.dhiegoCommerce.EcommerceProject.repositories.ProductRepository;
+import netscape.javascript.JSObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,8 +38,8 @@ public class ProductService {
         } else{
             Product req = new Product (arg);
             pRepository.save(req);
-            String mensage = "Produto cadastrado com sucesso!";
-            return new ResponseEntity<>(mensage, HttpStatus.CREATED);
+            Map<String, String> mensagem = Map.of("resultado", "Produto cadastrado com sucesso!");
+            return new ResponseEntity<>(mensagem, HttpStatus.CREATED);
         }
     }
 
@@ -48,10 +47,10 @@ public class ProductService {
     public ResponseEntity findAllProducts() {
         List<Product> list = pRepository.findAll();
 
-        if(list != null){
+        if(list != null && !list.isEmpty()){
             return new ResponseEntity<>(list, HttpStatus.OK);
         } else {
-            String message = "Sistema não conseguiu captar a lista de produtos";
+            Map<String, String> message = Map.of("mensagem", "Nenhum produto encontrado");
             return new ResponseEntity<>(message,HttpStatus.NO_CONTENT);
         }
     }
@@ -61,16 +60,18 @@ public class ProductService {
     public ResponseEntity deleteProductById(Long id) {
         if(pRepository.existsById(id)){
             pRepository.deleteById(id);
-            return new ResponseEntity("Produto excluido com sucesso",HttpStatus.OK);
+            return new ResponseEntity(HttpStatus.OK);
         } else{
-            return new ResponseEntity<>("O sistema não conseguiu encontrar produto com este id", HttpStatus.NOT_FOUND);
+            Map<String, String> erro = Map.of("erro","O sistema não conseguiu encontrar produto com este id");
+
+            return new ResponseEntity<>(erro, HttpStatus.NOT_FOUND);
         }
     }
 
     public ResponseEntity filtWithName(String name){
         if(name == null || name.isEmpty()){
-            String message = "O nome inserido é inválido";
-            return new ResponseEntity<>(message,HttpStatus.BAD_REQUEST);
+            Map<String, String> erro = Map.of("erro", "Nome inserido é inválido!");
+            return new ResponseEntity<>(erro, HttpStatus.BAD_REQUEST);
         }
 
         String searchName = name.trim().toLowerCase();
@@ -79,9 +80,46 @@ public class ProductService {
         if(!res.isEmpty()){
             return new ResponseEntity<>(res, HttpStatus.OK);
         } else {
-            String message = "Nome não encontrado!";
-            return new ResponseEntity<>(message,HttpStatus.NOT_FOUND);
+            Map<String, String> result = Map.of("resultado", "Nome não encontrado!");
+            return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         }
+    }
+
+    public ResponseEntity updateProduct (Long id, ProductDTO arg) {
+        if(!pRepository.existsById(id) || arg == null){
+            Map<String, String> erro = Map.of("erro", "Algum dos dados do usuário não está corretamente inserido!");
+            return new ResponseEntity<>(erro, HttpStatus.BAD_REQUEST);
+        }
+
+        List<String> erros = new ArrayList<>();
+        if(arg.getQuantity() < 0){
+            erros.add("A quantidade de produtos não pode ser negativa");
+        }
+        if(arg.getPrice() < 0){
+            erros.add("O valor do produto não pode ser negativo");
+        }
+
+        if(!erros.isEmpty()){
+            return new ResponseEntity<>(erros, HttpStatus.BAD_REQUEST);
+        }
+        Product req = pRepository.findById(id).get();
+
+
+        if(arg.getName() != null && !arg.getName().isEmpty()){
+            req.setName(arg.getName());
+        }
+        if(arg.getDescription() != null && !arg.getDescription().isEmpty()){
+            req.setDescription(arg.getDescription());
+        }
+        if(arg.getPrice() > 0){
+            req.setPrice(arg.getPrice());
+        }
+        if(arg.getQuantity() < 0){
+            req.setQuantity(arg.getQuantity());
+        }
+        pRepository.save(req);
+        Map<String, String> message = Map.of("mensagem", "Produto atualizado com sucesso!");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

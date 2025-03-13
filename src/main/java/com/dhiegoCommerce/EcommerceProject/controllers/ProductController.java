@@ -47,6 +47,10 @@ public class ProductController {
         return pService.filtWithName(name);
     }
 
+    @PutMapping("/product/uptade/{id}")
+    public ResponseEntity updateProduct(@PathVariable Long id, @RequestBody ProductDTO arg) {
+        return pService.updateProduct(id, arg);
+    }
 
 
 }
