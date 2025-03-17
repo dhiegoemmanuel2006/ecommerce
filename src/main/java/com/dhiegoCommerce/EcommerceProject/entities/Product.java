@@ -7,9 +7,7 @@ import lombok.*;
 import java.math.BigDecimal;
 
 
-@NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 @Entity
 @Table(name = "produtos")
 public class Product {
@@ -22,7 +20,7 @@ public class Product {
     private String name;
 
     @Column(name = "price", nullable = false)
-    private double price;
+    private double value;
 
     @Column(name = "quantidade")
     private int quantity;
@@ -32,7 +30,7 @@ public class Product {
 
     public Product(ProductDTO dto){
         this.name = dto.getName();
-        this.price = dto.getPrice();
+        this.value = dto.getPrice();
         this.quantity = dto.getQuantity();
         this.description = dto.getDescription();
     }
@@ -57,11 +55,11 @@ public class Product {
     }
 
     public double getPrice() {
-        return price;
+        return value;
     }
 
     public void setPrice(double price) {
-        this.price = price;
+        this.value = price;
     }
 
     public int getQuantity() {
