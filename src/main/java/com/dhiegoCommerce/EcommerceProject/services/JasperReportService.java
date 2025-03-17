@@ -28,6 +28,7 @@ public class JasperReportService {
         logger.info("Iniciando geração de relatório...");
 
         Map<String, Object> map = new HashMap<>();
+        map.put("title", "Relatório dos produtos");
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(produtos);
 
         String pathAbsolut = getAbsolutPath();
