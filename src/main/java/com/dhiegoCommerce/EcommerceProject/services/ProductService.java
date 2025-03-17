@@ -44,6 +44,17 @@ public class ProductService {
     }
 
 
+    public List<Product> findAllProductsTable() {
+        List<Product> list = pRepository.findAll();
+
+        if(list != null && !list.isEmpty()){
+            return list;
+        } else {
+            Map<String, String> message = Map.of("mensagem", "Nenhum produto encontrado");
+            return null;
+        }
+    }
+
     public ResponseEntity findAllProducts() {
         List<Product> list = pRepository.findAll();
 
