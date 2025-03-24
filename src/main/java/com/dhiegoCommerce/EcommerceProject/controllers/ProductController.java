@@ -17,8 +17,6 @@ import java.util.List;
 
 @RestController
 public class ProductController {
-
-    @Autowired
     private final ProductService pService;
 
     public ProductController(ProductService pService) {
@@ -27,7 +25,7 @@ public class ProductController {
     }
 
     @PostMapping("/product/add")
-    public ResponseEntity<?> addProduct(@RequestBody ProductDTO arg) {
+    public ResponseEntity addProduct(@RequestBody ProductDTO arg) {
         return pService.addProduct(arg);
     }
 

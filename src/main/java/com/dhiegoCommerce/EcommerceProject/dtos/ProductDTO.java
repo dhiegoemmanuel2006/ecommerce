@@ -2,15 +2,13 @@ package com.dhiegoCommerce.EcommerceProject.dtos;
 
 import lombok.*;
 
-import java.math.BigDecimal;
-
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDTO {
     private String name;
     private String description;
     private double price;
-    private int quantity;
+    private Long quantity;
 
     public String getName() {
         return name;
@@ -20,11 +18,11 @@ public class ProductDTO {
         this.name = name;
     }
 
-    public int getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 

@@ -23,7 +23,7 @@ public class Product {
     private double value;
 
     @Column(name = "quantidade")
-    private int quantity;
+    private Long quantity;
 
     @Column(name = "description")
     private String description;
@@ -62,11 +62,11 @@ public class Product {
         this.value = price;
     }
 
-    public int getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 
